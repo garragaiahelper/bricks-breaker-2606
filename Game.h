@@ -5,6 +5,8 @@
 
 class Game
 {
+	bool gameOver;
+	bool playerWon;
 	Ball ball;
 	Box paddle;
 

@@ -8,6 +8,9 @@ Game::Game()
 
 void Game::Reset()
 {
+	gameOver = false;
+	playerWon = false;
+
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
 	paddle.width = 12;
@@ -82,9 +85,18 @@ void Game::Render() const
 		brick.Draw();
 	}
 
-	if (bricks.empty())
+	if (gameOver)
 	{
-		const char* message = "You win! Press 'R' to play again.";
+		const char* message;
+
+		if (playerWon)
+		{
+			message = "You Win! Press 'R' to play again.";
+		}
+		else
+		{
+			message = "You Lose. Press 'R' to play again.";
+		}
 
 		int x = (WINDOW_WIDTH - strlen(message)) / 2;
 		int y = WINDOW_HEIGHT / 2;
@@ -121,6 +133,8 @@ void Game::CheckCollision()
 	if (bricks.empty())
 	{
 		ball.moving = false;
+		gameOver = true;
+		playerWon = true;
 		return;
 	}
 
@@ -130,4 +144,10 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position + ball.y_velocity >= WINDOW_HEIGHT - 1)
+	{
+		ball.moving = false;
+		gameOver = true;
+		playerWon = false;
+	}
 }
