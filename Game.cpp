@@ -82,6 +82,17 @@ void Game::Render() const
 		brick.Draw();
 	}
 
+	if (bricks.empty())
+	{
+		const char* message = "You win! Press 'R' to play again.";
+
+		int x = (WINDOW_WIDTH - strlen(message)) / 2;
+		int y = WINDOW_HEIGHT / 2;
+
+		Console::SetCursorPosition(x, y);
+		std::cout << message;
+	}
+
 	Console::Lock(false);
 }
 
@@ -101,11 +112,17 @@ void Game::CheckCollision()
 			{
 				bricks.erase(bricks.begin() + i);
 			}
+
+			break;
 		}
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.empty())
+	{
+		ball.moving = false;
+		return;
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
